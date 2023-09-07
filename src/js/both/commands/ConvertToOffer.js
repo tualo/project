@@ -27,7 +27,7 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
     },
     items: [
       {
-        hidden: true,
+        hidden: false,
         xtype: 'panel',
         itemId: 'startpanel',
         layout:{
@@ -38,11 +38,13 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
           {
             xtype: 'component',
             cls: 'lds-container',
-            html: '<div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>'
+            html: '<div class="lds-grid"><div class="blobs-container"><div class="blob green"></div></div>'
             +'<div><h3>Angebot erstellen</h3>'
             +'<span>Um das Angebot anzulegen, klicken Sie auf "Angebot erstellen"</span></div>'
           }
         ]
+        
+
       },{
         hidden: true,
         xtype: 'panel',
