@@ -1,6 +1,6 @@
 Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
     statics:{
-      glyph: 'fa-shipping-fast',
+      glyph: 'shipping-fast',
       title: 'In Angebot umwandeln',
       tooltip: 'In Angebot umwandeln'
     },
@@ -67,6 +67,8 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
       this.records = records;
       this.selectedrecords = selectedrecords;
       
+      me.getComponent('startpanel').show(); 
+      me.getComponent('waitpanel').hide();
     },
     
     getNextText: function(){
