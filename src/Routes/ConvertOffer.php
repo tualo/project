@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Tualo\Office\Project\Routes;
 
 use Tualo\Office\Mail\OutgoingMail;
@@ -28,7 +26,7 @@ class ConvertOffer implements IRoute{
                 App::result('msg', $e->getMessage());
             }
             App::contenttype('application/json');
-        }, ['put'], true);
+        }, ['put','get','post'], true);
 
     }
 }
