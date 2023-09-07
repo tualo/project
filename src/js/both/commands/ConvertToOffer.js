@@ -1,6 +1,6 @@
 Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
     statics:{
-      glyph: 'fa-envelope-open-dollar',
+      glyph: 'fa-shipping-fast',
       title: 'In Angebot umwandeln',
       tooltip: 'In Angebot umwandeln'
     },
