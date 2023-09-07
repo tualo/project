@@ -69,8 +69,8 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
       this.records = records;
       this.selectedrecords = selectedrecords;
       
-      me.getComponent('startpanel').show(); 
-      me.getComponent('waitpanel').hide();
+      this.getComponent('startpanel').show(); 
+      this.getComponent('waitpanel').hide();
     },
     
     getNextText: function(){
