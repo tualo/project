@@ -21,11 +21,15 @@ class ConvertOffer implements IRoute{
                 if(is_null($postdata)) throw new \Exception('Payload not readable');
                 
                 $db = App::get('session')->getDB();
+                $db->direct('start transaction');
                 $db->direct('call convertProject2Offer({project_id},@result)',$postdata);
+                App::result('mr',$db->moreResults());
                 $result = json_decode( $db->singleValue('select @result r',[],'r') ,true);
                 App::result('data',  $result);
                 App::result('success', true);
+                $db->direct('commit');
             } catch (\Exception $e) {
+                $db->direct('rollback');
                 App::result('msg', $e->getMessage());
             }
             App::contenttype('application/json');

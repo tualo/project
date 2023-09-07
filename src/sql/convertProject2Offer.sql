@@ -48,7 +48,6 @@ BEGIN
             "referencenr", projectmanagement.kundennummer,
             "reference", projectmanagement.name,
             "costcenter", 0,
-            "address", use_address,
             "project_name", projectmanagement.name,
             "project_id", projectmanagement.project_id,
             "companycode", "0000",
