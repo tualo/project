@@ -81,7 +81,7 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
       me.getComponent('startpanel').hide();
       me.getComponent('waitpanel').show();
       let res= await fetch('./project/convert2offer',{
-        method: 'PUT',
+        method: 'POST',
         body: JSON.stringify(this.record.getData())
       });
       if (res.success !== true){
