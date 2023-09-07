@@ -95,6 +95,8 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
             align: 't',
             iconCls: 'fa fa-warning'
         });
+      }else{
+        this.record.set('offer_id',res.data.id);
       }
       return res;
     }

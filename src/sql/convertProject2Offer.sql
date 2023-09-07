@@ -9,7 +9,7 @@ BEGIN
 
 
     select 
-
+json_arrayagg(
         json_object(
             "article", projectmanagement_tasks.product,
             "source_language", projectmanagement_tasks.source_language,
@@ -26,7 +26,8 @@ BEGIN
             "net", projectmanagement_tasks.product_amount * projectmanagement_tasks.product_price,
             "taxvalue", 1.19*(projectmanagement_tasks.product_amount * projectmanagement_tasks.product_price) - (projectmanagement_tasks.product_amount * projectmanagement_tasks.product_price),
             "gross", 1.19*(projectmanagement_tasks.product_amount * projectmanagement_tasks.product_price)
-        ) c
+        )
+ ) c
     INTO positions
 
     from projectmanagement_tasks
@@ -52,7 +53,7 @@ BEGIN
             "project_id", projectmanagement.project_id,
             "companycode", "0000",
             "office", 1,
-            "positions", positions
+            "positions", json_merge('[]',positions)
         )
     INTO @report
     FROM projectmanagement
