@@ -15,12 +15,15 @@ class ConvertOffer implements IRoute{
     public static function register()
     {
         BasicRoute::add('/project/convert2offer', function ($matches) {
-            $db = App::get('session')->getDB();
             
             try {
-
+                $postdata = json_decode(file_get_contents("php://input"),true);
+                if(is_null($postdata)) throw new \Exception('Payload not readable');
                 
-
+                $db = App::get('session')->getDB();
+                $db->direct('call convertProject2Offer({project_id},@result)',$postdata);
+                $result = json_decode( $db->singleValue('select @result r',[],'r') ,true);
+                App::result('data',  $result);
                 App::result('success', true);
             } catch (\Exception $e) {
                 App::result('msg', $e->getMessage());
