@@ -69,6 +69,17 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
       this.records = records;
       this.selectedrecords = selectedrecords;
       
+      if (this.record.get('offer_id')>0){
+
+        Ext.toast({
+          html: "Das Projekt wurde bereits in ein Angebot umgewandelt.<br/>Sie können aber ein neues Angebot erstellen.",
+          title: 'Hinweis',
+          align: 't',
+          iconCls: 'fa fa-warning'
+      });
+      }
+
+
       this.getComponent('startpanel').show(); 
       this.getComponent('waitpanel').hide();
     },
