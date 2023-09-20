@@ -6,11 +6,7 @@ use Tualo\Office\Mail\OutgoingMail;
 use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\Basic\Route as BasicRoute;
 use Tualo\Office\Basic\IRoute;
-use Tualo\Office\DS\DSTable;
-use Tualo\Office\PUG\PUG;
 use Tualo\Office\RemoteBrowser\RemotePDF;
-use DOMDocument;
-use PHPMailer\PHPMailer\PHPMailer;
 
 
 class CMSReportPDF implements IRoute
@@ -24,8 +20,8 @@ class CMSReportPDF implements IRoute
             $db = App::get('session')->getDB();
             $session = App::get('session');
             $types=[];
-            $types['bill'] = 'view_blg_list_rechnung';
-            $types['offer'] = 'view_blg_list_angebot';
+            $types['bill'] = ['table'=>'view_blg_list_rechnung','field'=>'invoice_id'];
+            $types['offer'] = ['table'=>'view_blg_list_angebot','field'=>'offer_id'];;
 
             try {
                 $project = $db->singleRow('select * from projectmanagement where project_id = {project_id} ', [
@@ -34,16 +30,16 @@ class CMSReportPDF implements IRoute
                 if (is_null($project)) throw new \Exception('Project not found');
                 if (!in_array($matches['type'],array_keys($types))) throw new \Exception('Type not allowed');
 
-                $template = $db->singleValue('select template from ds_renderer where table_name = {table_name} ', [
+                $template = $db->singleValue('select pug_template from ds_renderer where table_name = {table_name} ', [
                     'table_name' => $types[$matches['type']]
-                ]);
+                ],'pug_template');
+
                 if ($template === false) throw new \Exception('Template not found');
 
-                $res=RemotePDF::get($types[$matches['type']],$template, $matches['id'], true);
+                $res=RemotePDF::get($types[$matches['type']]['table'],$template, $project[$types[$matches['type']]['field']], true);
                 App::contenttype('application/pdf');
                 readfile($res['localfilename']);
                 unlink($res['localfilename']);
-                
                 BasicRoute::$finished=true;
             } catch (\Exception $e) {
                 App::result('msg', $e->getMessage());
