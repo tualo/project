@@ -31,15 +31,15 @@ class CMSReportPDF implements IRoute
                 if (!in_array($matches['type'],array_keys($types))) throw new \Exception('Type not allowed');
 
                 $template = $db->singleValue('select pug_template from ds_renderer where table_name = {table_name} ', [
-                    'table_name' => $types[$matches['type']]
+                    'table_name' => $types[$matches['type']]['table']
                 ],'pug_template');
 
                 if ($template === false) throw new \Exception('Template not found');
 
                 $res=RemotePDF::get($types[$matches['type']]['table'],$template, $project[$types[$matches['type']]['field']], true);
                 App::contenttype('application/pdf');
-                readfile($res['localfilename']);
-                unlink($res['localfilename']);
+                readfile($res['filename']);
+                unlink($res['filename']);
                 BasicRoute::$finished=true;
             } catch (\Exception $e) {
                 App::result('msg', $e->getMessage());
