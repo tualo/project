@@ -38,7 +38,7 @@ class CMSReportPDF implements IRoute
 
                 $res=RemotePDF::get($types[$matches['type']]['table'],$template, $project[$types[$matches['type']]['field']], true);
                 App::contenttype('application/pdf');
-                readfile($res['filename']);
+                App::body(file_get_contents($res['filename']));
                 unlink($res['filename']);
                 BasicRoute::$finished=true;
             } catch (\Exception $e) {
