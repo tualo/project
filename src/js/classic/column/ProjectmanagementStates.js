@@ -3,6 +3,11 @@ Ext.define('Tualo.project.grid.column.ProjectmenagementStates', {
     alias: 'widget.projectmenagement_states_column',
     align: 'left',
     tablename: 'projectmenagement_states',
+    configStore: {
+        type: 'ds_projectmenagement_states',
+        storeId: 'ds_projectmenagement_states_columnstore',
+        pageSize: 1000000
+    },
     renderer: function(value, metaData, record, rowIndex, colIndex, store, view ){
         try{
             let me = this,
