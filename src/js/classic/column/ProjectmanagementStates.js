@@ -1,11 +1,11 @@
-Ext.define('Tualo.project.grid.column.ProjectmenagementStates', {
+Ext.define('Tualo.project.grid.column.ProjectmanagementStates', {
     extend: 'Tualo.cmp.cmp_ds.column.DS',
-    alias: 'widget.projectmenagement_states_column',
+    alias: 'widget.projectmanagement_states_column',
     align: 'left',
-    tablename: 'projectmenagement_states',
+    tablename: 'projectmanagement_states',
     configStore: {
-        type: 'ds_projectmenagement_states',
-        storeId: 'ds_projectmenagement_states_columnstore',
+        type: 'ds_projectmanagement_states',
+        storeId: 'ds_projectmanagement_states_columnstore',
         pageSize: 1000000
     },
     renderer: function(value, metaData, record, rowIndex, colIndex, store, view ){

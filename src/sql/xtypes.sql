@@ -15,15 +15,15 @@ insert
 values
     (
         "Tualo",
-        "Tualo.project.grid.column.ProjectmenagementStates",
-        "Tualo.project.grid.column.ProjectmenagementStates",
+        "Tualo.project.grid.column.ProjectmanagementStates",
+        "Tualo.project.grid.column.ProjectmanagementStates",
         
-        "widget.projectmenagement_states_column",
+        "widget.projectmanagement_states_column",
         "Tualo.cmp.cmp_ds.column.DS",
-        "widget.projectmenagement_states_column",
+        "widget.projectmanagement_states_column",
 
-        "Tualo.project.grid.column.ProjectmenagementStates",
-        "Tualo Column for ProjectmenagementStates",
+        "Tualo.project.grid.column.ProjectmanagementStates",
+        "Tualo Column for ProjectmanagementStates",
         1,
         0
     )
