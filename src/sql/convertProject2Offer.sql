@@ -11,21 +11,21 @@ BEGIN
     select 
 json_arrayagg(
         json_object(
-            "article", projectmanagement_tasks.product,
+            "article", projectmanagement_tasks.article,
             "source_language", projectmanagement_tasks.source_language,
             "target_language", projectmanagement_tasks.target_language,
             "position", 1,
             "account", '8400',
-            "amount", projectmanagement_tasks.product_amount,
+            "amount", projectmanagement_tasks.amount,
             "project_name", projectmanagement.name,
             "project_id", projectmanagement.project_id,
             "notes", projectmanagement_tasks.description,
             "additionaltext", "",
-            "singleprice", projectmanagement_tasks.product_price,
+            "singleprice", projectmanagement_tasks.singleprice,
             "tax", 19,
-            "net", projectmanagement_tasks.product_amount * projectmanagement_tasks.product_price,
-            "taxvalue", 1.19*(projectmanagement_tasks.product_amount * projectmanagement_tasks.product_price) - (projectmanagement_tasks.product_amount * projectmanagement_tasks.product_price),
-            "gross", 1.19*(projectmanagement_tasks.product_amount * projectmanagement_tasks.product_price)
+            "net", projectmanagement_tasks.amount * projectmanagement_tasks.singleprice,
+            "taxvalue", 1.19*(projectmanagement_tasks.amount * projectmanagement_tasks.singleprice) - (projectmanagement_tasks.amount * projectmanagement_tasks.singleprice),
+            "gross", 1.19*(projectmanagement_tasks.amount * projectmanagement_tasks.singleprice)
         )
  ) c
     INTO positions
@@ -34,7 +34,7 @@ json_arrayagg(
     join projectmanagement
     on projectmanagement_tasks.project_id = projectmanagement.project_id
     where projectmanagement.project_id = use_project_id 
-    and projectmanagement_tasks.product_amount<>0;
+    and projectmanagement_tasks.amount<>0;
 
     select
         json_object(
