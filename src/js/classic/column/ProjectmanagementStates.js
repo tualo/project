@@ -25,8 +25,8 @@ Ext.define('Tualo.project.grid.column.ProjectmanagementStates', {
                         }
                     });
                 }
-                renderRecord = store.findRecord( column.idField , value,0,false,false,true);
-                value = '<i class="'+renderRecord.get('icon')+'" style="color:'+renderRecord.get('color')+'">'+'</i>'+value;
+                renderRecord = store.findRecord( 'id' , value,0,false,false,true);
+                value = '<i class="'+renderRecord.get('icon')+'" style="color:'+renderRecord.get('color')+'"> '+'</i> '+renderRecord.get('name');
                 /*if (renderRecord){
                     value =  renderRecord.get(column.displayField);
                 }else{
