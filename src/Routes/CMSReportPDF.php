@@ -20,8 +20,14 @@ class CMSReportPDF implements IRoute
             $db = App::get('session')->getDB();
             $session = App::get('session');
             $types=[];
-            $types['bill'] = ['table'=>'view_blg_list_rechnung','field'=>'invoice_id'];
-            $types['offer'] = ['table'=>'view_blg_list_angebot','field'=>'offer_id'];;
+            $types['bill'] =    [
+                'table'=>'view_blg_list_rechnung',
+                'field'=>'invoice_id'
+            ];
+            $types['offer'] =   [
+                'table'=>'view_blg_list_angebot',
+                'field'=>'offer_id'
+            ];
 
             try {
                 $project = $db->singleRow('select * from projectmanagement where project_id = {project_id} ', [
