@@ -1,5 +1,5 @@
 Ext.define('Tualo.project.form.field.Translators', {
-    extend: 'Ext.form.field.Text',
+    extend: 'Ext.form.field.ComboBox',
     alias: ['widget.tualo_projectmanagement_translators'],
     // store: {type:'array'},
     valueField: 'kundennummer',
