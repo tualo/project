@@ -7,12 +7,38 @@ Ext.define('Tualo.project.form.field.Translators', {
     anchor: '100%',
     queryMode: 'local',
   
+    getCurrentRecord: function(){
+        var fld = this;
+        if (fld.column){ 
+            console.log('initComponent','tualo_projectmanagement_translators','column',fld.column);
+            if (fld.column.view){ console.log('initComponent','tualo_projectmanagement_translators','view',fld.column.view);
+                if (fld.column.view.grid) return fld.column.view.grid.getSelection().getSelection()[0];
+            }
+        }else{
+            if (fld.up('form')) return tualo_projectmanagement_translators.up('form').getRecord();
+        }
+        return null;
+    },  
+
     initComponent: function() {
         var fld = this;
 
         console.log('initComponent','tualo_projectmanagement_translators',fld);
         this.callParent();
-
+        this.on('focus',function(){
+            console.log('focus','tualo_projectmanagement_translators',fld);
+            var r = fld.getCurrentRecord();
+            if (r){
+                var v = r.data;
+                console.log('focus','tualo_projectmanagement_translators',fld,v);
+                /*
+                if (!Ext.isEmpty(v['table_name'])){
+                    fld.tablename = v['table_name'];
+                    fld.store.load();
+                }*/
+            }
+        });
+        /*
         if (fld.column){ 
             console.log('initComponent','tualo_projectmanagement_translators','column',fld.column);
             if (fld.column.view){ console.log('initComponent','tualo_projectmanagement_translators','view',fld.column.view);
@@ -37,5 +63,6 @@ Ext.define('Tualo.project.form.field.Translators', {
     
         }, 5000);
         window.tualo_projectmanagement_translators = fld;
+        */
     }
 })
