@@ -11,6 +11,11 @@ Ext.define('Tualo.project.form.field.Translators', {
         this.store = Ext.create('Tualo.DataSets.store.Translator_dd_view', {
         });
         this.callParent([config]);
+        this.store.on('beforeload',this.onStoreBeforeLoad,this);
+    },
+    onStoreBeforeLoad: function(store, operation, eOpts){
+        //( store, operation, eOpts ) 
+        console.log('onStoreBeforeLoad','tualo_projectmanagement_translators',this.getCurrentRecord());
     },
 
     getCurrentRecord: function(){
