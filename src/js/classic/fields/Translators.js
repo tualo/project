@@ -2,11 +2,17 @@ Ext.define('Tualo.project.form.field.Translators', {
     extend: 'Ext.form.field.Text',
     alias: ['widget.tualo_projectmanagement_translators'],
     // store: {type:'array'},
-    valueField: 'id',
-    displayField: 'id',
+    valueField: 'kundennummer',
+    displayField: 'name',
     anchor: '100%',
-    queryMode: 'local',
+    // queryMode: 'local',
   
+    constructor: function(config) {
+        this.store = Ext.create('Tualo.DataSets.store.Translator_dd_view', {
+        });
+        this.callParent([config]);
+    },
+
     getCurrentRecord: function(){
         var fld = this;
         if (fld.column){ 
