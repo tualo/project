@@ -15,7 +15,7 @@ Ext.define('Tualo.project.form.field.Translators', {
                 if (fld.column.view.grid) return fld.column.view.grid.getSelection()[0];
             }
         }else{
-            if (fld.up('form')) return tualo_projectmanagement_translators.up('form').getRecord();
+            if (fld.up('form')) return fld.up('form').getRecord();
         }
         return null;
     },  
