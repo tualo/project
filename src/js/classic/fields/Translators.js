@@ -9,11 +9,13 @@ Ext.define('Tualo.project.form.field.Translators', {
   
     initComponent: function() {
         var fld = this;
+
         console.log('initComponent','tualo_projectmanagement_translators',fld);
+        /*
         if (fld.column) console.log('initComponent','tualo_projectmanagement_translators','column',fld.column);
         if (fld.column.view) console.log('initComponent','tualo_projectmanagement_translators','view',fld.column.view);
         if (fld.column.view.grid) console.log('initComponent','tualo_projectmanagement_translators','grid',fld.column.view.grid);
-
+        */
         setTimeout(()=>{
             if (fld.column) console.log('initComponent','tualo_projectmanagement_translators','column',fld.column);
             if (fld.column.view) console.log('initComponent','tualo_projectmanagement_translators','view',fld.column.view);
