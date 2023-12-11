@@ -12,7 +12,7 @@ Ext.define('Tualo.project.form.field.Translators', {
         if (fld.column){ 
             console.log('initComponent','tualo_projectmanagement_translators','column',fld.column);
             if (fld.column.view){ console.log('initComponent','tualo_projectmanagement_translators','view',fld.column.view);
-                if (fld.column.view.grid) return fld.column.view.grid.getSelection().getSelection()[0];
+                if (fld.column.view.grid) return fld.column.view.grid.getSelection()[0];
             }
         }else{
             if (fld.up('form')) return tualo_projectmanagement_translators.up('form').getRecord();
