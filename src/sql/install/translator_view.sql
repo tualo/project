@@ -3,6 +3,7 @@ select
 
 uebersetzer_sprachen.kundennummer,
 uebersetzer_sprachen.kostenstelle,
+uebersetzer_sprachen.artikel article,
 a.code source_language,
 b.code target_language,
 

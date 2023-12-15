@@ -21,6 +21,7 @@ Ext.define('Tualo.project.form.field.Translators', {
         reference = {
             target_language: r.get('target_language'),
             source_language: r.get('source_language'),
+            article: r.get('article'),
         }
         if (Ext.isEmpty(extraParams)){ extraParams = {}; };
         extraParams.reference = Ext.JSON.encode(reference);
