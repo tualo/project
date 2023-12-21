@@ -8,10 +8,10 @@ Ext.define('Tualo.project.form.field.Translators', {
     // queryMode: 'local',
   
     constructor: function(config) {
-        this.store = Ext.create('Tualo.DataSets.store.Translator_dd_view', {
-        });
+        this.store = Ext.create('Tualo.DataSets.store.Translator_dd_view', { });
         this.callParent([config]);
         this.store.on('beforeload',this.onStoreBeforeLoad,this);
+        this.getStore().load();
     },
     onStoreBeforeLoad: function(store, operation, eOpts){
         let extraParams = store.getProxy().getExtraParams(),
