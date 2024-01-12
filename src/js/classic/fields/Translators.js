@@ -5,6 +5,7 @@ Ext.define('Tualo.project.form.field.Translators', {
     valueField: 'kundennummer',
     displayField: 'name',
     anchor: '100%',
+    maxLength: 255,
     // queryMode: 'local',
   
     constructor: function(config) {

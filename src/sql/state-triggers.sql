@@ -1,31 +1,13 @@
 DELIMITER //
 
-alter table projectmanagement_tasks add tr_offer_request tinyint default 0;
-
--- set   system_versioning_alter_history = 'KEEP';
-
-alter table projectmanagement_tasks DROP SYSTEM VERSIONING;
-
-alter table projectmanagement_tasks add tr_request_accepted tinyint default 0;
-alter table projectmanagement_tasks add tr_request_rejected tinyint default 0;
-
-alter table projectmanagement_tasks add tr_offer_value decimal(15,5) default 0;
-
-
-alter table projectmanagement_tasks add tr_offer_accepted tinyint default 0;
-alter table projectmanagement_tasks add tr_offer_rejected tinyint default 0;
-
-
-alter table projectmanagement_dokumente ADD SYSTEM VERSIONING;
-alter table projectmanagement ADD SYSTEM VERSIONING;
-alter table projectmanagement_tasks ADD SYSTEM VERSIONING;
-
-CREATE DEFINER=`world.contact`@`%` PROCEDURE `proc_projectmanagement_state`(in in_project_id varchar(36),in in_task_id varchar(36))
+CREATE OR REPLACE PROCEDURE `proc_projectmanagement_state`(in in_project_id varchar(36),in in_task_id varchar(36))
     MODIFIES SQL DATA
 BEGIN
     DECLARE current_projectmanagement_schema varchar(36) default null;
     -- DECLARE current_projectmanagement_state varchar(36) default null;
     DECLARE current_projectmanagement_source_document varchar(36) default null;
+    DECLARE current_projectmanagement_charge_document varchar(36) default null;
+    
 
     DECLARE old_projectmanagement_state varchar(36) default null;
     DECLARE new_projectmanagement_state varchar(36) default null;
@@ -46,16 +28,18 @@ BEGIN
     
 
     select 
-        (projectmanagement.ROW_END&gt;now()) row_current,
+        (projectmanagement.ROW_END>now()) row_current,
         FIRST_VALUE(projectmanagement.state) OVER (
                 partition by projectmanagement.project_id 
                 ORDER BY projectmanagement.ROW_START ROWS BETWEEN 1 PRECEDING  AND  CURRENT ROW
         ) lv,
-        projectmanagement.state
+        projectmanagement.state,
+        projectmanagement.projectmanagement_schema
     into 
         use_row_current,
         old_projectmanagement_state,
-        new_projectmanagement_state
+        new_projectmanagement_state,
+        current_projectmanagement_schema
     from 
         projectmanagement for system_time all 
     where 
@@ -63,6 +47,7 @@ BEGIN
     having 
         row_current = 1
     ;
+    
 
     select 
         id 
@@ -74,6 +59,19 @@ BEGIN
         project_id = in_project_id 
         and typ = 'original'
     ;
+
+    select 
+        id 
+    into 
+        current_projectmanagement_charge_document
+    from 
+        projectmanagement_dokumente 
+    where 
+        project_id = in_project_id 
+        and typ = 'charge'
+    ;
+
+
 
     select 
         projectmanagement_tasks.tr_request_accepted,
@@ -95,6 +93,7 @@ BEGIN
     ;
 
 
+
     if (current_projectmanagement_schema = 'f996a8ea-4d67-11ee-b94d-002590c4e7c6') then
 
         if (new_projectmanagement_state = '0' and current_projectmanagement_source_document is null  ) then
@@ -112,20 +111,38 @@ BEGIN
         if (new_projectmanagement_state = '20003' and tr_request_accepted = 1  ) then
             set next_projectmanagement_state = '20004';
         end if;
+
+        if (new_projectmanagement_state = '20004' and tr_offer_accepted = 1  ) then
+            set next_projectmanagement_state = '20005';
+        end if;
+
+    elseif (current_projectmanagement_schema = '7b5ccd29-4d68-11ee-bb38-002590c72640') then
+
         
+        if (new_projectmanagement_state = '0' and current_projectmanagement_charge_document is null  ) then
+            set next_projectmanagement_state = '30002';
+        end if;
+
+        if (new_projectmanagement_state = '30002' and current_projectmanagement_charge_document is not null  ) then
+            set next_projectmanagement_state = '30003';
+        end if;
+
+
     end if;
 
 
     if (next_projectmanagement_state is not null) then
-        set sql_command = concat('UPDATE '+database()+'.projectmanagement SET state = "',next_projectmanagement_state,'" where project_id="',in_project_id,'" and @@hostname="',@@hostname,'"');
-        insert into deferred_sql_tasks(taskid,sessionuser,hostname,sqlstatement)
-        values (uuid(),getsessionuser(),@@hostname,sql_command);
+        set sql_command = concat('UPDATE ',database(),'.projectmanagement SET state = "',next_projectmanagement_state,'" where project_id="',in_project_id,'" ');
+
+        insert into deferred_sql_tasks
+                (taskid,sessionuser     ,hostname  ,sqlstatement)
+        values  (uuid(),getsessionuser(),@@hostname,sql_command );
 
         -- PREPARE stmt FROM sql_command;
         -- EXECUTE stmt;
         -- DEALLOCATE PREPARE stmt;
     end if;
-END // 
+END //
 
 CREATE OR REPLACE FUNCTION `getNewCustomerNumber`( ) RETURNS varchar(10) 
     NO SQL
