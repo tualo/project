@@ -18,14 +18,17 @@ Ext.define('Tualo.project.form.field.Translators', {
         let extraParams = store.getProxy().getExtraParams(),
             reference = {},
             r = this.getCurrentRecord();
-        //( store, operation, eOpts ) 
-        reference = {
-            target_language: r.get('target_language'),
-            source_language: r.get('source_language'),
-            article: r.get('article'),
+
+            if (Ext.isEmpty(extraParams)){ extraParams = {}; };
+        if (r){
+            //( store, operation, eOpts ) 
+            reference = {
+                target_language: r.get('target_language'),
+                source_language: r.get('source_language'),
+                article: r.get('article'),
+            }
+            extraParams.reference = Ext.JSON.encode(reference);
         }
-        if (Ext.isEmpty(extraParams)){ extraParams = {}; };
-        extraParams.reference = Ext.JSON.encode(reference);
         store.getProxy().setExtraParams(extraParams);
         console.log('onStoreBeforeLoad','tualo_projectmanagement_translators',this.getCurrentRecord());
     },

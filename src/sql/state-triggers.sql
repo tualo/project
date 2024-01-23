@@ -93,7 +93,7 @@ BEGIN
     ;
 
 
-
+    
     if (current_projectmanagement_schema = 'f996a8ea-4d67-11ee-b94d-002590c4e7c6') then
 
         if (new_projectmanagement_state = '0' and current_projectmanagement_source_document is null  ) then
