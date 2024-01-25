@@ -94,7 +94,10 @@ BEGIN
 
 
     
-    if (current_projectmanagement_schema = 'f996a8ea-4d67-11ee-b94d-002590c4e7c6') then
+    if (
+        (current_projectmanagement_schema = 'f996a8ea-4d67-11ee-b94d-002590c4e7c6') or
+        (current_projectmanagement_schema = 'b45d4d14-b9f7-11ee-80a3-002590c46e14')
+    ) then
 
         if (new_projectmanagement_state = '0' and current_projectmanagement_source_document is null  ) then
             set next_projectmanagement_state = '20001';
@@ -113,8 +116,13 @@ BEGIN
         end if;
 
         if (new_projectmanagement_state = '20004' and tr_offer_accepted = 1  ) then
-            set next_projectmanagement_state = '20005';
+            if (current_projectmanagement_schema = 'b45d4d14-b9f7-11ee-80a3-002590c46e14') then
+                set next_projectmanagement_state = '20009'; -- DL beauftragt
+            else
+                set next_projectmanagement_state = '20005';
+            end if;
         end if;
+
 
     elseif (current_projectmanagement_schema = '7b5ccd29-4d68-11ee-bb38-002590c72640') then
 
