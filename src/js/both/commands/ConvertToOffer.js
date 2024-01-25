@@ -112,11 +112,15 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
           let store = Ext.create('Tualo.DataSets.store.View_blg_list_angebot',{
             autoLoad: false
           });
-          store.filter([{property: 'id', value: res.data.id,operator: '='}]);
+          store.on('load',()=>{
 
-          let view = Ext.getApplication().addView('Tualo.cmp.mail.commands.SendPUGMail');  
-          view.loadRecord(store.getRange()[0],store.getRange(),store.getRange());
-          
+            let view = Ext.getApplication().addView('Tualo.cmp.mail.commands.SendPUGMail');  
+            view.loadRecord(store.getRange()[0],store.getRange(),store.getRange());
+  
+          });
+          store.filter([{property: 'id', value: res.data.id,operator: '='}]);
+          store.load();
+
         },200);
 
       }
