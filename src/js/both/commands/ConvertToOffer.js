@@ -114,8 +114,16 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
           });
           store.on('load',()=>{
 
+            /*
             let view = Ext.getApplication().addView('Tualo.cmp.mail.commands.SendPUGMail');  
             view.loadRecord(store.getRange()[0],store.getRange(),store.getRange());
+            */
+            Ext.getApplication().addView('Tualo.ds.lazy.DeferedCommand',{
+              tablename: 'view_blg_list_angebot',
+              command: 'sendpugmail',
+              record: idstore.getRange()[0]
+            });
+
   
           });
           store.filter([{property: 'id', value: res.data.id,operator: '='}]);
