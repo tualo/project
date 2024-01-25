@@ -121,7 +121,7 @@ Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
             Ext.getApplication().addView('Tualo.ds.lazy.DeferedCommand',{
               tablename: 'view_blg_list_angebot',
               command: 'sendpugmail',
-              record: idstore.getRange()[0]
+              record: store.getRange()[0]
             });
 
   
