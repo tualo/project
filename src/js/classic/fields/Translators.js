@@ -7,7 +7,7 @@ Ext.define('Tualo.project.form.field.Translators', {
     anchor: '100%',
     maxLength: 255,
     // queryMode: 'local',
-  
+    minChars: 2,    
     constructor: function(config) {
         this.store = Ext.create('Tualo.DataSets.store.Translator_dd_view', { });
         this.callParent([config]);
