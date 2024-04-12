@@ -1,4 +1,4 @@
-Ext.define('Tualo.cmp.project.commands.ConvertToOffer', {
+Ext.define('Tualo.cmp.project.commands.ConvertToBill', {
     statics:{
       glyph: 'fa-file-invoice-dollar',
       title: 'In Rechnung umwandeln',
