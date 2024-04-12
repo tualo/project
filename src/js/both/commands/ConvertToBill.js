@@ -1,6 +1,6 @@
 Ext.define('Tualo.cmp.project.commands.ConvertToBill', {
     statics:{
-      glyph: 'fa-file-invoice-dollar',
+      glyph: 'file-invoice',
       title: 'In Rechnung umwandeln',
       tooltip: 'In Rechnung umwandeln'
     },
