@@ -13,7 +13,7 @@ IF (select count(*) from projectmanagement where project_id = use_project_id) = 
 END IF;
 
 
-IF (select count(*) from projectmanagement where project_id = use_project_id and invoice_id>0) = 0 THEN
+IF (select count(*) from projectmanagement where project_id = use_project_id and invoice_id>0) > 0 THEN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Das Projekt ist bereits abgerechnet worden';
 END IF;
