@@ -1,0 +1,39 @@
+<?php
+namespace Tualo\Office\Project\Routes;
+
+use Tualo\Office\Mail\OutgoingMail;
+use Tualo\Office\Basic\TualoApplication as App;
+use Tualo\Office\Basic\Route as BasicRoute;
+use Tualo\Office\Basic\IRoute;
+use Tualo\Office\DS\DSTable;
+use Tualo\Office\PUG\PUG;
+use Tualo\Office\RemoteBrowser\RemotePDF;
+use DOMDocument;
+use PHPMailer\PHPMailer\PHPMailer;
+
+class ConvertBill implements IRoute{
+    public static function register()
+    {
+        BasicRoute::add('/project/convert2bill', function ($matches) {
+            
+            try {
+                $postdata = json_decode(file_get_contents("php://input"),true);
+                if(is_null($postdata)) throw new \Exception('Payload not readable');
+                
+                $db = App::get('session')->getDB();
+                $db->direct('start transaction');
+                $db->direct('call convertProject2Bill({project_id},@result)',$postdata);
+                App::result('mr',$db->moreResults());
+                $result = json_decode( $db->singleValue('select @result r',[],'r') ,true);
+                App::result('data',  $result);
+                App::result('success', true);
+                $db->direct('commit');
+            } catch (\Exception $e) {
+                $db->direct('rollback');
+                App::result('msg', $e->getMessage());
+            }
+            App::contenttype('application/json');
+        }, ['put','get','post'], true);
+
+    }
+}
