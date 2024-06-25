@@ -26,12 +26,17 @@ Ext.define('Tualo.project.grid.column.ProjectmanagementStates', {
                     });
                 }
                 renderRecord = store.findRecord( 'id' , value,0,false,false,true);
+
                 value = '<i class="'+renderRecord.get('icon')+'" style="color:'+renderRecord.get('color')+'; text-shadow: 0 0 5px black;"> '+'</i> '+renderRecord.get('name');
                 /*if (renderRecord){
                     value =  renderRecord.get(column.displayField);
                 }else{
                     metaData.tdStyle = "color: rgb(200,30,30)";
                 }*/
+            }
+
+            if(record.get('target_date')<(new Date()) && value!=null){
+                metaData.tdStyle = "color: rgb(200,30,30)";
             }
         }catch(e){
             console.debug(e)
