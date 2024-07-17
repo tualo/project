@@ -36,7 +36,7 @@ Ext.define('Tualo.project.grid.column.ProjectmanagementStates', {
             }
 
             if(record.get('target_date')<(new Date()) && value!=null){
-                metaData.tdStyle = "background-color: rgb(200,30,30)";
+                metaData.tdStyle = "background-color: rgba(200,30,30,0.2)";
             }
         }catch(e){
             console.debug(e)

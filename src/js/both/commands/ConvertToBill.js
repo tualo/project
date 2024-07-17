@@ -107,7 +107,7 @@ Ext.define('Tualo.cmp.project.commands.ConvertToBill', {
             iconCls: 'fa fa-warning'
         });
       }else{
-
+        window.open('./remote/pdf/view_blg_list_rechnung/report_template/'+res.data.id,'_blank');
         /*
         this.record.set('offer_id',res.data.id);
         setTimeout(()=>{
