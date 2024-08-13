@@ -6,4 +6,5 @@ require_once "Routes/ConvertBill.php";
 
 require_once "Routes/CMSReportPDF.php";
 require_once "Routes/Documents.php";
+require_once "Routes/Reminder.php";
 
