@@ -34,7 +34,7 @@ class Reminder implements IRoute{
                     }
 
                     $to = App::configuration('mail','force_mail_to',$translator['email']);
-                    $to_list = explode(';',$project['to']);
+                    $to_list = explode(';',$to);
 
                     $data = [];
                     $data['translator'] = $translator;
