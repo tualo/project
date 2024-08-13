@@ -18,9 +18,9 @@ class Reminder implements IRoute{
                 $from = App::configuration('mail','force_mail_from');
                 if (!$from) throw new \Exception('No from address defined');
 
-                $table = DSTable::instance('projectmanagement_not_reminded');
-                $list = $table->read()->get();
-                if ($table->error())  throw new \Exception($table->errorMessage());
+                $projectmanagement_not_reminded = DSTable::instance('projectmanagement_not_reminded');
+                $list = $projectmanagement_not_reminded->read()->get();
+                if ($projectmanagement_not_reminded->error())  throw new \Exception($projectmanagement_not_reminded->errorMessage());
 
                 foreach($list as $reminderRow){
                     $table = DSTable::instance('projectmanagement');
@@ -55,6 +55,14 @@ class Reminder implements IRoute{
                     $mail->Body    = strip_tags(\Tualo\Office\PUG\PUG::render($tpl_txt,   $data ));
                     if(!$mail->send()) {
                         throw new \Exception('Message has not been sent');
+                    }
+
+                    foreach($to_list as $to){
+                        $db->direct('insert ignore into projectmanagement_reminder_mail (project_id,mail_to,state) values ({project_id},{mail_to},{state})',[
+                            'project_id'=>$reminderRow['project_id'],
+                            'mail_to'=>trim($to),
+                            'state'=>'na'
+                        ]);
                     }
                 }
 
