@@ -28,16 +28,16 @@ create table  if not exists  projectmanagement_reminder_mail (
 
 
 
-create or replace view projectmanagement_not_reminded as  
+create view if not exists projectmanagement_not_reminded as  
 with not_reminded as (
-    select project_id from  projectmanagement
+    select project_id,target_date from  projectmanagement
     where project_id not in (
         select project_id from projectmanagement_reminder_mail
         where state='na'
     )
-    and target_date <= curdate() + interval - 1 day
+    and curdate() + interval - 1 day <=  target_date
 )
-select not_reminded.project_id,projectmanagement_tasks.task_id from not_reminded
+select not_reminded.project_id,target_date,projectmanagement_tasks.task_id from not_reminded
 join projectmanagement_tasks on projectmanagement_tasks.project_id = not_reminded.project_id
 and projectmanagement_tasks.name='Dolmetschen'
 ;

@@ -34,7 +34,7 @@ class Reminder implements IRoute{
                     }
 
                     $to = App::configuration('mail','force_mail_to',$translator['email']);
-
+                    $to_list = explode(';',$project['to']);
 
                     $data = [];
                     $data['translator'] = $translator;
@@ -46,7 +46,10 @@ class Reminder implements IRoute{
 
                     $mail = \Tualo\Office\Mail\SMTP::get();
                     $mail->setFrom($from);
-                    $mail->addAddress($to);
+                    foreach($to_list as $to){
+                        $mail->addAddress(trim($to));
+                    }
+
                     $mail->Subject = 'Erinnerung: '.$project['name'];
                     $mail->isHTML(false); 
                     $mail->Body    = strip_tags(\Tualo\Office\PUG\PUG::render($tpl_txt,[ 'data'=>$data ]));
