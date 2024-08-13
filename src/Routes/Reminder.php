@@ -52,7 +52,7 @@ class Reminder implements IRoute{
 
                     $mail->Subject = 'Erinnerung: '.$project['name'];
                     $mail->isHTML(false); 
-                    $mail->Body    = strip_tags(\Tualo\Office\PUG\PUG::render($tpl_txt,[ 'data'=>$data ]));
+                    $mail->Body    = strip_tags(\Tualo\Office\PUG\PUG::render($tpl_txt,   $data ));
                     if(!$mail->send()) {
                         throw new \Exception('Message has not been sent');
                     }
