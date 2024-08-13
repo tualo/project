@@ -20,6 +20,8 @@ class Reminder implements IRoute{
 
                 $table = DSTable::instance('projectmanagement_not_reminded');
                 $list = $table->read()->get();
+                if ($table->error())  throw new \Exception($table->errorMessage());
+
                 foreach($list as $reminderRow){
                     $table = DSTable::instance('projectmanagement');
                     $project = $table->read()->f('project_id','=',$reminderRow['project_id'])->getSingle();
