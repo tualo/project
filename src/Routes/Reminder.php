@@ -10,7 +10,7 @@ class Reminder implements IRoute{
 
 
         BasicRoute::add('/project/remindermails'.'',function($matches){
-
+            App::contenttype('application/json');
             $db = App::get('session')->getDB();
             $db->direct('start transaction');
             $tpl_txt='sendmail_reminder_interpreter';
@@ -54,15 +54,14 @@ class Reminder implements IRoute{
                 }
 
                 $db->direct('commit');
+
+                App::result('success', true);
             } catch (\Exception $e) {
                 App::result('msg', $e->getMessage());
             }
             
             
             
-            App::body( base64_decode( $data ) );
-            BasicRoute::$finished = true;
-            http_response_code(200);
         
         },['get'],true);
 
