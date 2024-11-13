@@ -47,7 +47,7 @@ json_arrayagg(
             "time", cast(now() as time),
             "warehouse", 0,
             "referencenr", projectmanagement.kundennummer,
-            "reference", projectmanagement.name,
+            "reference", projectmanagement.client_order_id,
             "costcenter", 0,
             "project_name", projectmanagement.name,
             "project_id", projectmanagement.project_id,
