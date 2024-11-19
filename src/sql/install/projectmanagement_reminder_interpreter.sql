@@ -5,6 +5,7 @@ create table if not exists projectmanagement_reminder_mail_state (
     name varchar(255) not null
 );
 insert ignore into projectmanagement_reminder_mail_state(id,name) values ('na','N/A');
+insert ignore into projectmanagement_reminder_mail_state(id,name) values ('delayed','delayed');
 
 create table  if not exists  projectmanagement_reminder_mail (
     
