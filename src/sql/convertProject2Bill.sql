@@ -32,10 +32,10 @@ json_arrayagg(
             "notes", projectmanagement_tasks.description,
             "additionaltext", "",
             "singleprice", projectmanagement_tasks.singleprice,
-            "tax", 19,
+            "tax", getArticleTaxRate('normalbesteuert',curdate(),projectmanagement_tasks.article),
             "net", projectmanagement_tasks.amount * projectmanagement_tasks.singleprice,
-            "taxvalue", 1.19*(projectmanagement_tasks.amount * projectmanagement_tasks.singleprice) - (projectmanagement_tasks.amount * projectmanagement_tasks.singleprice),
-            "gross", 1.19*(projectmanagement_tasks.amount * projectmanagement_tasks.singleprice)
+            "taxvalue", (1 + getArticleTaxRate('normalbesteuert',curdate(),projectmanagement_tasks.article)/100 )*(projectmanagement_tasks.amount * projectmanagement_tasks.singleprice) - (projectmanagement_tasks.amount * projectmanagement_tasks.singleprice),
+            "gross",  (1 + getArticleTaxRate('normalbesteuert',curdate(),projectmanagement_tasks.article)/100 )*(projectmanagement_tasks.amount * projectmanagement_tasks.singleprice)
         )
  ) c
     INTO positions
@@ -70,8 +70,8 @@ json_arrayagg(
     join view_editor_relation_rechnung
     on view_editor_relation_rechnung.referencenr = projectmanagement.kundennummer
     WHERE projectmanagement.project_id = use_project_id;
-            select @report;
             call setReport('rechnung',@report,report);
-            update projectmanagement set offer_id = json_value(report,'$.id') where project_id = use_project_id;
+            -- update projectmanagement set offer_id = json_value(report,'$.id') where project_id = use_project_id;
+            update projectmanagement set invoice_id = json_value(report,'$.id') where project_id = use_project_id;
 
 END

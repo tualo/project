@@ -30,33 +30,63 @@ Ext.define('Tualo.cmp.project.commands.CreateSubProject', {
   getNextText: function () {
     return 'Anlegen';
   },
-  run: async function () {
+  passName: async function(record){
     let parent = Ext.getCmp(this.calleeId),
-        newrecord = parent.getController().cloneRecord();
-    
-    
-        newrecord.set('project_folder', this.record.get('project_id'));
+        tn=parent.getViewModel().get('record'),
+        localstore = Ext.create( 
+          Ext.ClassManager.getName(
+            Ext.ClassManager.getByAlias('store.' + record.__table_name + '_store')
+          ), {
+              autoLoad: false,
+              autoSync: false,
+              pageSize: 100000,
+              type: record.__table_name + '_store'
+            }
+        );
+    return new Promise((resolve, reject) => {
 
-        var store = Ext.create(
-            Ext.ClassManager.getName(Ext.ClassManager.getByAlias('store.' + newrecord.get('__table_name') + '_store')), 
-            {
-            autoLoad: false,
-            autoSync: false,
-            pageSize: 100000,
-            type: newrecord.get('__table_name') + '_store'
-        });
-        store.setFilters({
-          property:  'project_id',
+        localstore.setFilters({
+          property:  'project_folder',
           operator: 'eq',
-          value: 'project_id'
+          value: record.project_folder
         });
-        store.load({
-
+        localstore.load({
+          scope: this,
           callback: function () {
-            var r = store.getRange();
-            newrecord.set( 'name', this.record.get('name') + ( (r.length()+1)+'').padStart(2, '0') );
+            var r = localstore.getRange();
+            record.name = this.record.get('name') +'-'+ ( (r.length+1)+'').padStart(2, '0');
+            resolve(record);
           }
         });
+      });
+  },
+  run: async function () {
+    let parent = Ext.getCmp(this.calleeId),
+        dsstore = parent.getViewModel().get('record').store,
+        newObject = {...parent.getViewModel().get('record').data},
+        tablenamecase = newObject.__table_name.toLocaleUpperCase().substring(0, 1) + newObject.__table_name.toLowerCase().slice(1);
+
+        newObject.project_folder = newObject.project_id;
+        newObject.__id = Ext.id();
+        delete newObject.project_id;
+        delete newObject.createdate;
+        delete newObject.__id;
+
+
+
+        let data = await this.passName(newObject);
+        setTimeout(()=>{
+
+          let record = Ext.create('Tualo.DataSets.model.'+tablenamecase,data);
+          parent.getController().appendRecord(record);
+          parent.getViewModel().set('isModified',true);
+          parent.getViewModel().set('isNew',true);
+          parent.getController().forcedSave();
+          console.log('-');
+
+        },100)
+
+
     return null;
   }
 });
