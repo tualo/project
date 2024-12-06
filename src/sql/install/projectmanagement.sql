@@ -46,4 +46,4 @@ CREATE TABLE IF NOT EXISTS `projectmanagement_uebersetzer` (
 
 );
 
--- ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci WITH SYSTEM VERSIONING
+--  WITH SYSTEM VERSIONING
