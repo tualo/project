@@ -47,3 +47,14 @@ CREATE TABLE IF NOT EXISTS `projectmanagement_uebersetzer` (
 );
 
 --  WITH SYSTEM VERSIONING
+
+
+CREATE TABLE `projectmanagement_states` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `color` varchar(255) NOT NULL,
+  `icon` varchar(255) NOT NULL,
+  `select_for_report` tinyint(4) DEFAULT 0,
+  PRIMARY KEY (`id`)
+);
+

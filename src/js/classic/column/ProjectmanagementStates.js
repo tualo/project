@@ -10,6 +10,7 @@ Ext.define('Tualo.project.grid.column.ProjectmanagementStates', {
     },
     renderer: function(value, metaData, record, rowIndex, colIndex, store, view ){
         try{
+
             let me = this,
                 column = me.getColumns()[colIndex],
                 configStore = column.configStore,
@@ -27,17 +28,32 @@ Ext.define('Tualo.project.grid.column.ProjectmanagementStates', {
                 }
                 renderRecord = store.findRecord( 'id' , value,0,false,false,true);
 
-                value = '<i class="'+renderRecord.get('icon')+'" style="color:'+renderRecord.get('color')+'; text-shadow: 0 0 5px black;"> '+'</i> '+renderRecord.get('name');
-                /*if (renderRecord){
-                    value =  renderRecord.get(column.displayField);
-                }else{
-                    metaData.tdStyle = "color: rgb(200,30,30)";
-                }*/
+                value = '<i class="'+renderRecord.get('icon')+'" style="color:'+renderRecord.get('color')+'; text-shadow: 0 0 5px black;margin-right: 12px;"> '+'</i> '+renderRecord.get('name');
             }
 
-            if(record.get('target_date')<(new Date()) && value!=null){
-                metaData.tdStyle = "background-color: rgba(200,30,30,0.2)";
+            let useStyles = [];
+
+            // 'record.target_date < 2387 && ( state==a  || state==b || ) ' 
+            if (
+                record.get('target_date')<(new Date()) && 
+                value!=null &&
+                [20009,30005].indexOf(record.get('state'))>=0
+            ){
+                useStyles.push("background-color: rgba(200,30,30,0.2)");
             }
+            
+            if (
+                record.get('invoice_id')!=0
+            ){
+                useStyles.push("font-weight: lighter;");
+            }else{
+                useStyles.push("font-weight: normal;");
+            }
+
+            metaData.tdStyle = useStyles.join(';');
+            
+            
+
         }catch(e){
             console.debug(e)
         }
