@@ -37,7 +37,7 @@ Ext.define('Tualo.project.grid.column.ProjectmanagementStates', {
             if (
                 record.get('target_date')<(new Date()) && 
                 value!=null &&
-                [20009,30005].indexOf(record.get('state'))>=0
+                [20009,30005,20011].indexOf(record.get('state'))>=0
             ){
                 useStyles.push("background-color: rgba(200,30,30,0.2)");
             }
