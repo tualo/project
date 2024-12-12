@@ -84,7 +84,7 @@ Ext.define('Tualo.cmp.project.commands.CreateSubProject', {
           parent.getController().forcedSave();
           console.log('-');
 
-        },100)
+        },1000)
 
 
     return null;
