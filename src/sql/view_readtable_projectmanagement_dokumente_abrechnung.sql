@@ -1,9 +1,11 @@
-alter table projectmanagement_dokumente add iban varchar(35) default null;
-alter table projectmanagement_dokumente add bic varchar(35) default null;
+alter table projectmanagement_dokumente
+add iban varchar(35) default null;
+alter table projectmanagement_dokumente
+add bic varchar(35) default null;
 
-CREATE OR REPLACE VIEW `view_readtable_projectmanagement_dokumente_abrechnung` AS
+CREATE OR REPLACE  VIEW `view_readtable_projectmanagement_dokumente_abrechnung` AS
 select ifnull(`a`.`report_id`, -1) AS `id`,
-    `projectmanagement_dokumente`.`id` AS `pid`,
+    `a`.`pid` AS `pid`,
     if(
         `df`.`type` = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         or `df`.`type` = 'application/msword',
@@ -29,15 +31,28 @@ select ifnull(`a`.`report_id`, -1) AS `id`,
     ifnull(`a`.`report_id`, -1) AS `report_id`,
     ifnull(`blg_hdr_krechnung`.`netto`, 0) AS `net`,
     ifnull(`blg_hdr_krechnung`.`brutto`, 0) AS `gross`,
+    ifnull(`blg_hdr_krechnung`.`offen`, 0) AS `open`,
     `df`.`name` AS `datei`,
     `df`.`type` AS `type`,
     `uebersetzer`.`kundennummer` AS `kundennummer`,
     `uebersetzer`.`kostenstelle` AS `kostenstelle`,
-    ifnull(projectmanagement_dokumente.iban,uebersetzer.iban) iban,
-    ifnull(projectmanagement_dokumente.bic,uebersetzer.bic) bic,
+    ifnull(`a`.`iban`, `uebersetzer`.`iban`) AS `iban`,
+    ifnull(`a`.`bic`, `uebersetzer`.`bic`) AS `bic`,
     'krechnung' AS `tabellenzusatz`,
     `projectmanagement`.`name` AS `projectmanagement_name`,
-    ifnull(`a`.`report_id`, -1) AS `belegnummer`
+    ifnull(`a`.`report_id`, -1) AS `belegnummer`,
+    concat(
+        './pugreporthtml/GiroCode/report_template/110885',
+        `projectmanagement_dokumente`.`id`
+    ) AS `girocode`,
+    concat_ws(
+        ' ',
+        ifnull(`uebersetzer`.`firma`, ''),
+        ifnull(`uebersetzer`.`nachname`, ''),
+        ', ',
+        ifnull(`uebersetzer`.`vorname`, '')
+    ) AS `gironame`,
+    ifnull(`a`.`angewiesen`, 0) AS `angewiesen1`
 from (
         (
             (

@@ -24,3 +24,46 @@ BEGIN
         new.project_id
     );
 END //
+
+
+
+CREATE or replace TRIGGER `projectmanagement_subproject_ai_copy` AFTER INSERT ON `projectmanagement_subproject` FOR EACH ROW
+BEGIN
+
+    insert ignore into projectmanagement_dokumente (
+        id,
+        project_id,
+        file_id,
+        typ
+    )
+    select 
+        uuid(),
+        new.project_id,
+        projectmanagement_dokumente.file_id,
+        projectmanagement_dokumente.typ
+    from 
+        projectmanagement_dokumente 
+    where 
+        projectmanagement_dokumente.project_id = new.parent_project;
+
+    replace into projectmanagement_mission (
+        project_id,
+        name,
+        room,
+        street,
+        zipcode,
+        city
+    )
+    select 
+        new.project_id,
+        projectmanagement_mission.name,
+        projectmanagement_mission.room,
+        projectmanagement_mission.street,
+        projectmanagement_mission.zipcode,
+        projectmanagement_mission.city
+    from 
+        projectmanagement_mission 
+    where 
+        projectmanagement_mission.project_id = new.parent_project;
+
+END //

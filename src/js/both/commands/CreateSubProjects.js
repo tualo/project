@@ -83,6 +83,7 @@ Ext.define('Tualo.cmp.project.commands.CreateSubProject', {
           parent.getViewModel().set('isNew',true);
           parent.getController().forcedSave();
           console.log('-');
+          
 
         },10)
         let dataX = await setTimeout(()=>{},1000);
