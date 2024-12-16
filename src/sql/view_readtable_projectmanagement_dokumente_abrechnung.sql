@@ -3,9 +3,9 @@ add iban varchar(35) default null;
 alter table projectmanagement_dokumente
 add bic varchar(35) default null;
 
-CREATE OR REPLACE  VIEW `view_readtable_projectmanagement_dokumente_abrechnung` AS
+CREATE OR REPLACE VIEW `view_readtable_projectmanagement_dokumente_abrechnung` AS
 select ifnull(`a`.`report_id`, -1) AS `id`,
-    `a`.`pid` AS `pid`,
+    `projectmanagement_dokumente`.`id` AS `pid`,
     if(
         `df`.`type` = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         or `df`.`type` = 'application/msword',
@@ -77,4 +77,4 @@ from (
         )
         left join `blg_hdr_krechnung` on(`a`.`report_id` = `blg_hdr_krechnung`.`id`)
     )
-where `projectmanagement_dokumente`.`typ` = 'invoice'
+where `projectmanagement_dokumente`.`typ` = 'invoice';

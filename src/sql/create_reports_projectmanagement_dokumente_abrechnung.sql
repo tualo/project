@@ -1,5 +1,6 @@
+delimiter // 
 
-CREATE OR REPLACE PROCEDURE `create_reports_projectmanagement_dokumente_abrechnung`( )
+CREATE PROCEDURE IF NOT EXISTS `create_reports_projectmanagement_dokumente_abrechnung`( )
 BEGIN 
     declare adr text;
     declare report json;
@@ -33,7 +34,7 @@ BEGIN
                             "position", 1,
                             "account", 5906,
                             "amount", 1.00000,
-                            "notes", null,
+                            "notes", "",
                             "additionaltext", "",
                             "singleprice", 0,
                             "tax", 19.00000,
@@ -46,7 +47,7 @@ BEGIN
                             "position", 2,
                             "account", 5906,
                             "amount", 1.00000,
-                            "notes", null,
+                            "notes", "",
                             "additionaltext", "",
                             "singleprice", 0,
                             "tax", 0,
@@ -55,11 +56,33 @@ BEGIN
                             "gross", 0
                         )
                     )
-            ) o;
+            ) o
+            
+            into report;
 
-            call setReport('krechnung',report,reportresult);
-            select json_value(reportresult,"$.id");
-            update projectmanagement_dokumente_abrechnung set report_id = json_value(reportresult,"$.id") where id=rec.report_id; 
+select report;
+select json_value(report,"$.referencenr");
+select rec.pid;
+
+             call setReport('krechnung',report,reportresult);
+             select json_value(reportresult,"$.id");
+             select reportresult;
+             -- update projectmanagement_dokumente_abrechnung set report_id = json_value(reportresult,"$.id") where id=rec.pid; 
+             insert into projectmanagement_dokumente_abrechnung
+             (
+                pid,
+                project_id,
+                file_id,
+                typ,
+                report_id
+             ) values 
+             (
+                rec.pid,
+                rec.project_id,
+                rec.file_id,
+                rec.typ,
+                json_value(reportresult,"$.id")
+             );
     end for;
 
-END 
+END //
