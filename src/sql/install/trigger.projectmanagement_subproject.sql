@@ -29,6 +29,7 @@ END //
 
 CREATE or replace TRIGGER `projectmanagement_subproject_ai_copy` AFTER INSERT ON `projectmanagement_subproject` FOR EACH ROW
 BEGIN
+    DECLARE use_sql longtext;
 
     insert ignore into projectmanagement_dokumente (
         id,
@@ -66,4 +67,47 @@ BEGIN
     where 
         projectmanagement_mission.project_id = new.parent_project;
 
+
+
+
+    set use_sql=concat("call projectmanagement_subproject_copy_tasks('",new.project_id,"','",new.parent_project,"')");
+    insert into deferred_sql_tasks (taskid,sessionuser     ,hostname  ,sqlstatement) values  (uuid(),getsessionuser(),@@hostname,use_sql );
+    
+    
+
+
 END //
+
+
+CREATE or replace PROCEDURE `projectmanagement_subproject_copy_tasks` (in_project_id varchar(36),in_parent_project varchar(36))
+MODIFIES SQL DATA
+BEGIN
+    for r in (
+        select 
+        *
+        from 
+            projectmanagement_tasks 
+        where 
+            projectmanagement_tasks.project_id = in_parent_project
+    ) do
+
+        update 
+            projectmanagement_tasks
+        set
+            description=r.description,
+            state=r.state,
+            source_language=r.source_language,
+            target_language=r.target_language,
+            unit_text=r.unit_text,
+            article=r.article,
+            amount=r.amount,
+            singleprice=r.singleprice,
+            unit=r.unit,
+            current_translator=r.current_translator
+        where 
+            projectmanagement_tasks.name = r.name
+            and projectmanagement_tasks.project_id = in_project_id
+            and (amount=0 or current_translator is null);
+
+    end for;
+END // 

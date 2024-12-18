@@ -8,6 +8,26 @@ Ext.define('Tualo.project.form.field.Translators', {
     maxLength: 255,
     // queryMode: 'local',
     minChars: 2,    
+
+    triggers: {
+        opends: {
+            cls: 'x-fa fa-link',
+            tooltip: "Den Datensatz öffnen",
+            handler: function(btn) {
+                let route = "#ds/uebersetzer/kundennummer/"+btn.getValue();
+                if (btn.getSelectedRecord()==null){
+                    btn.getStore().load({
+                        callback: function(){
+                            window.open(route,'_blank');
+                        }
+                    })
+                }else{
+                    window.open(route,'_blank');
+                }
+            }
+        }
+    },
+
     constructor: function(config) {
         this.store = Ext.create('Tualo.DataSets.store.Translator_dd_view', { });
         this.callParent([config]);
