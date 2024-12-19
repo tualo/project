@@ -36,7 +36,11 @@ select ifnull(`a`.`report_id`, -1) AS `id`,
     `df`.`type` AS `type`,
     `uebersetzer`.`kundennummer` AS `kundennummer`,
     `uebersetzer`.`kostenstelle` AS `kostenstelle`,
-    ifnull(`a`.`iban`, `uebersetzer`.`iban`) AS `iban`,
+    if(
+        trim(`a`.`iban`) = '',
+        `uebersetzer`.`iban`,
+        ifnull(`a`.`iban`, `uebersetzer`.`iban`)
+    ) AS `iban`,
     ifnull(`a`.`bic`, `uebersetzer`.`bic`) AS `bic`,
     'krechnung' AS `tabellenzusatz`,
     `projectmanagement`.`name` AS `projectmanagement_name`,
@@ -52,7 +56,53 @@ select ifnull(`a`.`report_id`, -1) AS `id`,
         ', ',
         ifnull(`uebersetzer`.`vorname`, '')
     ) AS `gironame`,
-    ifnull(`a`.`angewiesen`, 0) AS `angewiesen1`
+    ifnull(`a`.`angewiesen`, 0) AS `angewiesen`,
+    concat(
+        'BDC',
+        char(10),
+        '002',
+        char(10),
+        '1',
+        char(10),
+        'SCT',
+        char(10),
+        ifnull(
+            ifnull(`a`.`bic`, `uebersetzer`.`bic`),
+            '00000000'
+        ),
+        char(10),
+        ifnull(
+            concat_ws(
+                ' ',
+                ifnull(`uebersetzer`.`firma`, ''),
+                ifnull(`uebersetzer`.`nachname`, ''),
+                ', ',
+                ifnull(`uebersetzer`.`vorname`, '')
+            ),
+            'GIROCODE_NAME'
+        ),
+        char(10),
+        ifnull(
+            ifnull(`a`.`iban`, `uebersetzer`.`iban`),
+            'DE000000000000000000'
+        ),
+        char(10),
+        'EUR',
+        round(ifnull(`blg_hdr_krechnung`.`offen`, 0), 2),
+        char(10),
+        'TRAD',
+        char(10),
+        '',
+        char(10),
+        concat(
+            ifnull(`a`.`report_id`, -1),
+            ' ',
+            `projectmanagement`.`name`
+        ),
+        char(10),
+        '',
+        char(10)
+    ) girocodedata
 from (
         (
             (
@@ -78,3 +128,4 @@ from (
         left join `blg_hdr_krechnung` on(`a`.`report_id` = `blg_hdr_krechnung`.`id`)
     )
 where `projectmanagement_dokumente`.`typ` = 'invoice';
+
