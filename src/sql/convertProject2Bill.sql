@@ -119,6 +119,7 @@ update projectmanagement
 set invoice_id = json_value(report, '$.id')
 where project_id = use_project_id;
 END //
+
 CREATE OR REPLACE PROCEDURE `convertAllSubProject2Bill`(in use_project_id varchar(36), out report json) BEGIN
 DECLARE rpt JSON;
 SET rpt = (

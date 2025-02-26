@@ -22,7 +22,8 @@ class ConvertBill implements IRoute{
                 
                 $db = App::get('session')->getDB();
                 $db->direct('start transaction');
-                $db->direct('call convertProject2Bill({project_id},@result)',$postdata);
+                // $db->direct('call convertProject2Bill({project_id},@result)',$postdata);
+                $db->direct('call convertAllSubProject2Bill({project_id},@result)',$postdata);
                 App::result('mr',$db->moreResults());
                 $result = json_decode( $db->singleValue('select @result r',[],'r') ,true);
                 App::result('data',  $result);
