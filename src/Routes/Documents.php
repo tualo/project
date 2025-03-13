@@ -42,25 +42,32 @@ class Documents implements IRoute
                 }
             }
 
-            list($mime, $data) =  explode(',', $imagedata);
-            $etag = md5($data);
-            App::contenttype(str_replace('data:', '', $mime));
 
 
-            // header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
-            header("Etag: $etag");
-            header('Cache-Control: public');
-
-            if (
-                (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag))
-            ) {
-                header("HTTP/1.1 304 Not Modified");
+            if (strpos($imagedata, ',') === false) {
+                header("HTTP/1.1 404 Not Found a Base64 File");
                 exit;
-            }
+            } else {
+                list($mime, $data) =  explode(',', $imagedata);
+                $etag = md5($data);
+                App::contenttype(str_replace('data:', '', $mime));
 
-            App::body(base64_decode($data));
-            BasicRoute::$finished = true;
-            http_response_code(200);
+
+                // header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+                header("Etag: $etag");
+                header('Cache-Control: public');
+
+                if (
+                    (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag))
+                ) {
+                    header("HTTP/1.1 304 Not Modified");
+                    exit;
+                }
+
+                App::body(base64_decode($data));
+                BasicRoute::$finished = true;
+                http_response_code(200);
+            }
         }, ['get'], true);
     }
 }
