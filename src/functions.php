@@ -11,3 +11,4 @@ require_once "Routes/Documents.php";
 require_once "Routes/Reminder.php";
 require_once "Routes/DAVSync.php";
 
+require_once "Routes/JsLoader.php";
