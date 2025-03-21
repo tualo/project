@@ -74,7 +74,8 @@ Ext.define('Tualo.project.lazy.controller.ProjectServiceMail', {
                     limit: 10000,
                     filter: [
                         { property: 'project_id', operator: 'eq', value: rs[i].get('project_id') },
-                        { property: 'current_translator', operator: 'is not null', value: null }
+                        { property: 'current_translator', operator: 'is not null', value: null },
+                        { property: 'current_translator', operator: '<>', value: '' }
                     ]
                 })
             })).json();
