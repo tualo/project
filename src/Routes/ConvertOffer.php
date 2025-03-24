@@ -1,4 +1,5 @@
 <?php
+
 namespace Tualo\Office\Project\Routes;
 
 use Tualo\Office\Mail\OutgoingMail;
@@ -11,20 +12,21 @@ use Tualo\Office\RemoteBrowser\RemotePDF;
 use DOMDocument;
 use PHPMailer\PHPMailer\PHPMailer;
 
-class ConvertOffer implements IRoute{
+class ConvertOffer implements IRoute
+{
     public static function register()
     {
         BasicRoute::add('/project/convert2offer', function ($matches) {
-            
+
             try {
-                $postdata = json_decode(file_get_contents("php://input"),true);
-                if(is_null($postdata)) throw new \Exception('Payload not readable');
-                
+                $postdata = json_decode(file_get_contents("php://input"), true);
+                if (is_null($postdata)) throw new \Exception('Payload not readable');
+
                 $db = App::get('session')->getDB();
                 $db->direct('start transaction');
-                $db->direct('call convertProject2Offer({project_id},@result)',$postdata);
-                App::result('mr',$db->moreResults());
-                $result = json_decode( $db->singleValue('select @result r',[],'r') ,true);
+                $db->direct('call convertAllSubProject2Offer({project_id},@result)', $postdata);
+                App::result('mr', $db->moreResults());
+                $result = json_decode($db->singleValue('select @result r', [], 'r'), true);
                 App::result('data',  $result);
                 App::result('success', true);
                 $db->direct('commit');
@@ -33,7 +35,6 @@ class ConvertOffer implements IRoute{
                 App::result('msg', $e->getMessage());
             }
             App::contenttype('application/json');
-        }, ['put','get','post'], true);
-
+        }, ['put', 'get', 'post'], true);
     }
 }

@@ -64,4 +64,26 @@ json_arrayagg(
             call setReport('angebot',@report,report);
             update projectmanagement set offer_id = json_value(report,'$.id') where project_id = use_project_id;
 
-END
+END //
+
+
+CREATE OR REPLACE PROCEDURE `convertAllSubProject2Offer`(in use_project_id varchar(36), out report json) BEGIN
+DECLARE rpt JSON;
+SET rpt = (
+        select convertAllSubProjectOffer(use_project_id)
+    );
+call setReport('angebot', rpt, report);
+for r in (
+    select project_id
+    from JSON_TABLE(
+            rpt,
+            '$.positions[*]' COLUMNS (
+                `project_id` varchar(128) path '$.project_id'
+            )
+        ) as jtx
+) do
+update projectmanagement
+set offer_id = json_value(report, '$.id')
+where project_id = r.project_id;
+end for;
+END //

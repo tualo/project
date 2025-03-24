@@ -45,6 +45,9 @@ ifnull(`dlrn`.`gross`, 0) AS `dl_gross`,
 ifnull(`dlrn`.`open`, 0) AS `dl_open`,
 ifnull(`blg_hdr_rechnung`.`netto`, 0) - ifnull(`dlrn`.`net`, 0) AS `net_result`,
 
+
+
+
 create table projectmanagement_additional_data as 
 (
     project_id	varchar(36)	primary key,
@@ -57,8 +60,10 @@ create table projectmanagement_additional_data as
     abrechnung	varchar(255) default '',
     projectmanagement_tasks_uebersetzer_status_text    varchar(255) default '',
     report_links    varchar(255) default '',
-    name	varchar(255) default ''
-)
+    constraint fk_projectmanagement_additional_data_project_id foreign key (project_id) references projectmanagement (project_id)
+    on delete cascade
+    on update cascade
+);
 
 
 
@@ -73,10 +78,21 @@ BEGIN
         projectmanagement_additional_data 
     set 
         cu_gross = new.brutto,
-        cu_open = new.offen,
-        net_result = new.netto - ifnull(`dlrn`.`net`, 0)
+        cu_open = new.offen
     where project_id = new.project_id;
 END //
+
+
+CREATE or replace TRIGGER `trigger_blg_hdr_rechnung_au_additional_data` AFTER UPDATE ON `blg_hdr_krechnung` FOR EACH ROW
+BEGIN
+    update 
+        projectmanagement_additional_data 
+    set 
+        dl_gross = new.brutto,
+        dl_open = new.offen
+    where project_id = new.project_id;
+END //
+
 
 CREATE or replace TRIGGER `trigger_projectmanagement_additional_data_bu_net_result` BEFORE UPDATE ON `projectmanagement_additional_data` FOR EACH ROW
 BEGIN
