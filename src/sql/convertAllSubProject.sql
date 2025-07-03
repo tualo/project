@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION `convertAllSubProject`(
 BEGIN
     DECLARE positions JSON;
     DECLARE sub_positions JSON;
-    DECLARE sv_start date default curdate();
+    DECLARE sv_start date default '2099-12-31';
     DECLARE sv_stop date  default '1999-01-01';
     DECLARE total_net decimal(15,6) default 0;
     DECLARE net decimal(15,6) default 0;
@@ -63,6 +63,7 @@ BEGIN
             on projectmanagement_tasks.project_id = projectmanagement.project_id
     where 
         projectmanagement.project_id = use_project_id 
+        and projectmanagement.state <> '90000'
         and projectmanagement_tasks.amount<>0
         and projectmanagement.invoice_id = 0
         and (
@@ -143,6 +144,7 @@ order by target_date,name
                 on projectmanagement_tasks.project_id = projectmanagement.project_id
         where 
             projectmanagement.project_id = sub.project_id 
+            and projectmanagement.state <> '90000'
             and projectmanagement_tasks.amount<>0
             and projectmanagement.invoice_id = 0
             
