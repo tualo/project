@@ -16,15 +16,15 @@ Ext.define('Tualo.project.lazy.SelectiveProjectPreview2', {
 
     layout: 'fit',
     config: {
-        project_id: null
+        kundennummer: null
     },
-    applyProject_id: function (project_id) {
-        this.getViewModel().set('project_id', project_id);
+    applyKundennummer: function (kundennummer) {
+        this.getViewModel().set('kundennummer', kundennummer);
         this.getController().loadProject();
-        return project_id;
+        return kundennummer;
     },
-    updateProject_id: function (project_id) {
-        this.getViewModel().set('project_id', project_id);
+    updateKundennummer: function (kundennummer) {
+        this.getViewModel().set('kundennummer', kundennummer);
         this.getController().loadProject();
     },
     items: [
