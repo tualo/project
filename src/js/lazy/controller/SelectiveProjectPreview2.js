@@ -136,6 +136,15 @@ Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreview2', {
         let html = me.splitInnerBodyTagHtml(res);
         let node = document.createElement('div');
         node.innerHTML = html;
+        if (node.querySelector('table > tbody > tr > td') === null) {
+            Ext.toast({
+                html: 'Keine Daten gefunden',
+                title: 'Info',
+                align: 't',
+                iconCls: 'fa fa-info'
+            });
+            return;
+        }
         html = node.querySelector('table > tbody > tr > td').innerHTML;
         // let head = node.querySelector('head');
         // window.frame = me.getView().getComponent('layoutPanel').getComponent('iframe');
