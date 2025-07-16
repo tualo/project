@@ -34,7 +34,7 @@ Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreview2', {
                 operator: 'eq',
                 value: vm.get('kundennummer')
             });
-        console.log('loadProject', vm.get('project_id'), st, newFilter);
+
         st.clearFilter();
         st.addFilter(newFilter);
         st.addFilter(new Ext.util.Filter({
@@ -50,7 +50,16 @@ Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreview2', {
         let me = this,
             vm = me.getViewModel();
 
-
+        if (records.length === 0) {
+            Ext.toast({
+                html: 'Keine Unterprojekte gefunden',
+                title: 'Info',
+                align: 't',
+                iconCls: 'fa fa-info'
+            });
+            return;
+        }
+        vm.set('project_id', records[0].get('project_id'));
         let res = await (await fetch('./ds/projectmanagement/read/' + vm.get('project_id'), {})).json();
 
         let project = res.data[0];
