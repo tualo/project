@@ -1,6 +1,6 @@
-Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreview', {
+Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreview2', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.selective_project_preview',
+    alias: 'controller.selective_project_preview2',
 
 
 
@@ -32,7 +32,7 @@ Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreview', {
             newFilter = new Ext.util.Filter({
                 property: 'sel',
                 operator: 'eq',
-                value: vm.get('project_id')
+                value: vm.get('kundennummer')
             });
         console.log('loadProject', vm.get('project_id'), st, newFilter);
         st.clearFilter();
