@@ -93,7 +93,6 @@ class Reminder implements IRoute
         BasicRoute::add('/project/remindermailsdelayed' . '', function ($matches) {
             App::contenttype('application/json');
             $db = App::get('session')->getDB();
-            $db->direct('start transaction');
             $tpl_txt = 'sendmail_reminder_interpreter_delayed';
             try {
 
@@ -105,6 +104,7 @@ class Reminder implements IRoute
                 if ($projectmanagement_not_reminded->error())  throw new \Exception($projectmanagement_not_reminded->errorMessage());
 
                 foreach ($list as $reminderRow) {
+                    $db->direct('start transaction');
                     $table = DSTable::instance('projectmanagement');
                     $project = $table->f('project_id', '=', $reminderRow['project_id'])->read()->getSingle();
                     $translator = DSTable::instance('uebersetzer')->f('kundennummer', '=', $project['uebersetzer'])->read()->getSingle();
@@ -146,9 +146,9 @@ class Reminder implements IRoute
                             'state' => 'delayed'
                         ]);
                     }
+                    $db->direct('commit');
                 }
 
-                $db->direct('commit');
 
                 App::result('success', true);
             } catch (\Exception $e) {
