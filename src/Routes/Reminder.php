@@ -25,6 +25,12 @@ class Reminder implements IRoute
                 $list = $projectmanagement_not_reminded->read()->get();
                 if ($projectmanagement_not_reminded->error())  throw new \Exception($projectmanagement_not_reminded->errorMessage());
 
+                if (count($list) == 0) {
+                    App::result('success', true);
+                    App::result('msg', 'No reminders to send');
+                    return;
+                }
+
                 foreach ($list as $reminderRow) {
                     $db->direct('start transaction');
                     $table = DSTable::instance('projectmanagement');
