@@ -121,7 +121,7 @@ Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreview2', {
     );
     */
 
-        let res = await fetch('./pugreporthtml/view_blg_listrechnung/report_2025_content/' + vm.get('project_id') + '?ids=[\'' + ids.join("','") + '\']', {
+        let res = await fetch('./pugreporthtml/view_blg_listrechnung/report_2025_content/' + ids[0] + '?ids=[\'' + ids.join("','") + '\']', {
             method: 'GET'
         });
         res = await res.text();
@@ -212,11 +212,13 @@ Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreview2', {
     onDo: async function (btn) {
         let me = this;
 
+        let a = me.getSelectedIds();
+
         let res = await fetch('./project/convert2bill', {
             method: 'PUT',
             body: JSON.stringify({
-                project_id: me.getViewModel().get('project_id'),
-                ids: me.getSelectedIds()
+                project_id: a[0],
+                ids: a
             })
         });
         res = await res.json();

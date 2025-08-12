@@ -9,11 +9,12 @@ class Project
     public static function getPreview(string $id, string $string_ids = '[]'): mixed
     {
         $db = App::get('session')->getDB();
+        $j = json_decode(str_replace("'", '"', $string_ids), true);
         $report = $db->singleValue(
             'select convertAllSubProject({id},{ids}) o',
             [
                 'id' => $id,
-                'ids' => $string_ids
+                'ids' => json_encode($j ? $j : [])
             ],
             'o'
         );
