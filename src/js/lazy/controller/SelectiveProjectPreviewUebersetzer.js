@@ -122,7 +122,7 @@ Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreviewUebersetzer', {
     );
     */
 
-        let res = await fetch('./pugreporthtml/view_blg_list_gutschrift/report_2025_content/' + ids[0] + '?dlids=[\'' + ids.join("','") + '\']', {
+        let res = await fetch('./pugreporthtml/view_blg_list_gs/report_2025_content/' + ids[0] + '?dlids=[\'' + ids.join("','") + '\']', {
             method: 'GET'
         });
         res = await res.text();
