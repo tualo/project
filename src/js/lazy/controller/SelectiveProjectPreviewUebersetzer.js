@@ -37,11 +37,12 @@ Ext.define('Tualo.project.lazy.controller.SelectiveProjectPreviewUebersetzer', {
 
         st.clearFilter();
         st.addFilter(newFilter);
-        st.addFilter(new Ext.util.Filter({
+        /*st.addFilter(new Ext.util.Filter({
             property: 'invoice_id',
             operator: 'eq',
             value: 0
         }));
+        */
 
         st.load();
     },
