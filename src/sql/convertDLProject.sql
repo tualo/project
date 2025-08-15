@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION `convertDLProject`(use_project_id varchar(36),
+CREATE or replace FUNCTION `convertDLProject`(use_project_id varchar(36),
     use_ids json
 ) RETURNS longtext CHARSET utf8mb4 COLLATE utf8mb4_bin
     DETERMINISTIC
@@ -43,7 +43,8 @@ select
                     "tax", getArticleTaxRate('normalbesteuert',curdate(),projectmanagement_tasks.article),
                     "net", projectmanagement_tasks.tr_offer_value,
                     "taxvalue", (1 + getArticleTaxRate('normalbesteuert',curdate(),projectmanagement_tasks.article)/100 )*(projectmanagement_tasks.tr_offer_value) - (projectmanagement_tasks.tr_offer_value),
-                    "gross",  (1 + getArticleTaxRate('normalbesteuert',curdate(),projectmanagement_tasks.article)/100 )*(projectmanagement_tasks.tr_offer_value)
+                    "gross",  (1 + getArticleTaxRate('normalbesteuert',curdate(),projectmanagement_tasks.article)/100 )*(projectmanagement_tasks.tr_offer_value),
+                    "brutto",  (1 + getArticleTaxRate('normalbesteuert',curdate(),projectmanagement_tasks.article)/100 )*(projectmanagement_tasks.tr_offer_value)
                 )
         ) c,
         min(target_date) as sv_start,
@@ -89,10 +90,10 @@ select
             "buchungsdatum", cast(now() as date),
             "service_period_start", sv_start,
             "service_period_stop", sv_stop,
-            "address", view_editor_relation_krechnung.address,
+            "address", view_editor_relation_gs.address,
             "time", cast(now() as time),
             "warehouse", 0,
-            "tabellenzusatz", "dlpreview",
+            "tabellenzusatz", "gs",
             "referencenr", projectmanagement.uebersetzer,
             "reference", projectmanagement.name,
             "costcenter", 0,
@@ -114,8 +115,8 @@ select
         )
     INTO result
     FROM projectmanagement
-    join view_editor_relation_krechnung
-    on view_editor_relation_krechnung.referencenr = projectmanagement.uebersetzer
+    join view_editor_relation_gs
+    on view_editor_relation_gs.referencenr = projectmanagement.uebersetzer
     WHERE projectmanagement.project_id = use_project_id;
 
     return result;
