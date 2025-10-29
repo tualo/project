@@ -9,7 +9,7 @@ use Tualo\Office\DS\DSTable;
 use Tualo\Office\RemoteBrowser\RemotePDF;
 
 
-class ImportGS implements IRoute
+class ImportGS extends \Tualo\Office\Basic\RouteWrapper
 {
     public static function register()
     {

@@ -12,7 +12,7 @@ use Tualo\Office\RemoteBrowser\RemotePDF;
 use DOMDocument;
 use PHPMailer\PHPMailer\PHPMailer;
 
-class ConvertDL implements IRoute
+class ConvertDL extends \Tualo\Office\Basic\RouteWrapper
 {
     public static function register()
     {
