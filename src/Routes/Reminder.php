@@ -54,34 +54,41 @@ class Reminder extends \Tualo\Office\Basic\RouteWrapper
                     ];
                     $data['mission'] = $mission;
 
+                    $hasAddress = false;
                     $mail = \Tualo\Office\Mail\SMTP::get();
                     $mail->setFrom($from);
                     foreach ($to_list as $to) {
-                        $mail->addAddress(trim($to));
+                        if (trim($to) != '') {
+                            $hasAddress = true;
+                            $mail->addAddress(trim($to));
+                        }
                     }
 
-                    $mail->Subject = 'Erinnerung: ' . $project['name'];
-                    $mail->isHTML(false);
-                    $mail->Body    = strip_tags(\Tualo\Office\PUG\PUG::render($tpl_txt,   $data));
-                    if (!$mail->send()) {
-                        App::logger('PROJECT')->error('Reminder mail NOT sent for project ' . $project['project_id'] . ' to ' . implode(', ', $to_list) . ' (task_id: ' . $reminderRow['task_id'] . ')');
-                        throw new \Exception('Message has not been sent');
-                    }
+                    if ($hasAddress) {
 
-                    foreach ($to_list as $to) {
-                        $db->direct('insert ignore into projectmanagement_reminder_mail (project_id,mail_to,state) values ({project_id},{mail_to},{state})', [
-                            'project_id' => $reminderRow['project_id'],
-                            'mail_to' => trim($to),
-                            'state' => 'na'
-                        ]);
+                        $mail->Subject = 'Erinnerung: ' . $project['name'];
+                        $mail->isHTML(false);
+                        $mail->Body    = strip_tags(\Tualo\Office\PUG\PUG::render($tpl_txt,   $data));
+                        if (!$mail->send()) {
+                            App::logger('PROJECT')->error('Reminder mail NOT sent for project ' . $project['project_id'] . ' to ' . implode(', ', $to_list) . ' (task_id: ' . $reminderRow['task_id'] . ')');
+                            throw new \Exception('Message has not been sent');
+                        }
+
+                        foreach ($to_list as $to) {
+                            $db->direct('insert ignore into projectmanagement_reminder_mail (project_id,mail_to,state) values ({project_id},{mail_to},{state})', [
+                                'project_id' => $reminderRow['project_id'],
+                                'mail_to' => trim($to),
+                                'state' => 'na'
+                            ]);
+                        }
+                        App::logger('PROJECT')->debug('Reminder mail sent for project ' . $project['project_id'] . ' to ' . implode(', ', $to_list) . ' (task_id: ' . $reminderRow['task_id'] . ')');
                     }
-                    App::logger('PROJECT')->debug('Reminder mail sent for project ' . $project['project_id'] . ' to ' . implode(', ', $to_list) . ' (task_id: ' . $reminderRow['task_id'] . ')');
                     $db->direct('commit');
                 }
 
 
                 App::result('success', true);
-            } catch (\Exception $e) {
+            } catch (\Exception $e) {R
                 App::logger('PROJECT')->error('Error sending reminder mail: ' . $e->getMessage());
                 App::result('msg', $e->getMessage());
             }

@@ -10,6 +10,7 @@ require_once "Routes/ConvertDL.php";
 require_once "Routes/CMSReportPDF.php";
 require_once "Routes/Documents.php";
 require_once "Routes/Reminder.php";
+require_once "Routes/RequestedReminder.php";
 require_once "Routes/DAVSync.php";
 
 require_once "Routes/JsLoader.php";
