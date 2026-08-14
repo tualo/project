@@ -88,7 +88,7 @@ class Reminder extends \Tualo\Office\Basic\RouteWrapper
 
 
                 App::result('success', true);
-            } catch (\Exception $e) {R
+            } catch (\Exception $e) {
                 App::logger('PROJECT')->error('Error sending reminder mail: ' . $e->getMessage());
                 App::result('msg', $e->getMessage());
             }
