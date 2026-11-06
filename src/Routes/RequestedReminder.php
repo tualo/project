@@ -65,7 +65,7 @@ class RequestedReminder extends \Tualo\Office\Basic\RouteWrapper
                     $mail->isHTML(false);
                     $mail->Body    = strip_tags(\Tualo\Office\PUG\PUG::render($tpl_txt,   $data));
                     if (!$mail->send()) {
-                        App::logger('PROJECT')->error('Reminder mail NOT sent for project ' . $project['project_id'] . ' to ' . implode(', ', $to_list) . ' (task_id: ' . $reminderRow['task_id'] . ')');
+                        App::logger('PROJECT')->error('Reminder mail NOT sent for project ' . $project['project_id'] . ' to ' . implode(', ', $to_list) . ' (task_id: ' . $reminderRow['task_id'] . ')', []);
                         throw new \Exception('Message has not been sent');
                     }
 
@@ -83,7 +83,7 @@ class RequestedReminder extends \Tualo\Office\Basic\RouteWrapper
 
                 App::result('success', true);
             } catch (\Exception $e) {
-                App::logger('PROJECT')->error('Error sending reminder mail: ' . $e->getMessage());
+                App::logger('PROJECT')->error('Error sending reminder mail: ' . $e->getMessage(), []);
                 App::result('msg', $e->getMessage());
             }
         }, ['get'], true);
